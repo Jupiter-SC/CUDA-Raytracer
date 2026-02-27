@@ -20,6 +20,7 @@ typedef Hitable* HitableObject;
 //typedef shared_ptr<Hitable> HitableObject;
 typedef std::vector<HitableObject> HitableObjects;
 
+// This is lowkey bad actually lol. I need to see where things go out of bounds
 // Checking the CUDA error codes whenever we call a CUDA function
 // https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/
 #define checkCudaErrors(val) check_cuda( (val), #val, __FILE__, __LINE__ )
@@ -61,10 +62,14 @@ __global__ void createWorld(Hitable** list, Hitable** world) {
     }
 }
 
-
 __device__ color getColor(const ray& r, Hitable** world) {
+    //vec3 unitDirection = unitVector(r.direction());
+    //float t = 0.5f * (unitDirection.y() + 1.0f);
+    //return (1.0f - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
+
     HitInfo hitInfo;
-    if ((*world)->hit(r, interval(0.001, infinity), hitInfo)) {
+    //if ((*world)->hit(r, interval(0.001, infinity), hitInfo)) {
+    if ((*world)->hit(r, 0.0, FLT_MAX, hitInfo)) {
         return 0.5f * vec3(hitInfo.normal.x() + 1.0f, hitInfo.normal.y() + 1.0f, hitInfo.normal.z() + 1.0f);
     }
     else {
@@ -72,9 +77,6 @@ __device__ color getColor(const ray& r, Hitable** world) {
         return (1.0f - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
     }
 
-    //vec3 unit_direction = unitVector(r.direction());
-    //float t = 0.5f * (unit_direction.y() + 1.0f);
-    //return (1.0f - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
 }
 
 // Kernal to render to the framebuffer
@@ -86,7 +88,7 @@ __global__ void render(color* frameBuffer, int max_x, int max_y, vec3 lowerLeftC
     // Out of buffer bounds
     if ((i >= max_x) || (j >= max_y)) return;
 
-    int pixel_index = j * max_x * 3 + i * 3;
+    int pixel_index = j * max_x + i;
     float u = float(i) / float(max_x);
     float v = float(j) / float(max_y);
 
@@ -98,7 +100,7 @@ __global__ void render(color* frameBuffer, int max_x, int max_y, vec3 lowerLeftC
 int main()
 {
     // Image size
-    int width = 256, height = 256;
+    int width = 400, height = 225;
     
     // These can be changed. Threads per block
     int threadX = 8, threadY = 8;
@@ -108,15 +110,17 @@ int main()
 
     // Calculate the size of the FrameBuffer in bytes
     int num_pixels = width * height;
-    size_t frameBuffer_size = 3 * num_pixels * sizeof(color);
+    size_t frameBuffer_size = num_pixels * sizeof(color);
 
     // Allocate FrameBuffer on GPU using Unified Memory (can be accessed by GPU & CPU)
     color* frameBuffer;
-    checkCudaErrors(cudaMallocManaged((void**)&frameBuffer, frameBuffer_size));
+    //checkCudaErrors(cudaMallocManaged((void**)&frameBuffer, frameBuffer_size));
+    cudaMallocManaged((void**)&frameBuffer, frameBuffer_size);
 
     // Allocate world data on GPU
     // TODO Convert List to C cringe
-    Hitable** device_HitableList;   // device_ prefix is device-only data
+    // Using device_ prefix for device-only data
+    Hitable** device_HitableList;
     checkCudaErrors(cudaMalloc((void**)&device_HitableList, 2 * sizeof(Hitable*)));
 
     Hitable** device_World;
@@ -162,6 +166,11 @@ int main()
             std::clog << "\rScanlines remaining:\t " << (j) << ' ' << std::flush;
 
             size_t pixel_index = j * width + i;
+
+            //int ir = frameBuffer[0].r();
+            //int ig = 0;
+            //int ib = 0;
+
             int ir = int(255.99 * frameBuffer[pixel_index].r());
             int ig = int(255.99 * frameBuffer[pixel_index].g());
             int ib = int(255.99 * frameBuffer[pixel_index].b());

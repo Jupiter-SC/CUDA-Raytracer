@@ -35,6 +35,9 @@ struct Hitable {
 public:
 	virtual ~Hitable() = default;
 
+	// temp
+	__device__ virtual bool hit(const ray& r, float t_min, float t_max, HitInfo& rec) const = 0;
+
 	__device__ virtual bool hit(const ray& r, interval rayT, HitInfo& info) const = 0;
 };
 
@@ -77,6 +80,20 @@ struct HitableList : public Hitable {
 	//void add(Hitable obj) {
 	//	add(make_shared<Hitable>(obj));
 	//}
+
+	__device__ bool hit(const ray& r, float t_min, float t_max, HitInfo& rec) const {
+		HitInfo temp_rec;
+		bool hit_anything = false;
+		float closest_so_far = t_max;
+		for (int i = 0; i < listSize; i++) {
+			if (list[i]->hit(r, t_min, closest_so_far, temp_rec)) {
+				hit_anything = true;
+				closest_so_far = temp_rec.t;
+				rec = temp_rec;
+			}
+		}
+		return hit_anything;
+	}
 
 	__device__ bool hit(const ray& r, interval rayT, HitInfo& info) const {
 		HitInfo tempInfo;
