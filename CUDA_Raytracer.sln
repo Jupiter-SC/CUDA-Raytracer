@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CUDA_Raytracer", "CUDA_Raytracer.vcxproj", "{CD363796-0E5B-52A1-AC77-DEDECCABAFD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD363796-0E5B-52A1-AC77-DEDECCABAFD4}.Debug|x64.ActiveCfg = Debug|x64
+		{CD363796-0E5B-52A1-AC77-DEDECCABAFD4}.Debug|x64.Build.0 = Debug|x64
+		{CD363796-0E5B-52A1-AC77-DEDECCABAFD4}.Release|x64.ActiveCfg = Release|x64
+		{CD363796-0E5B-52A1-AC77-DEDECCABAFD4}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D2FAFFC0-EF02-4313-AC13-3DA38B48779E}
+	EndGlobalSection
+EndGlobal
