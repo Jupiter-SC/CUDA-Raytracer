@@ -1,8 +1,4 @@
-#pragma once
-
-#include "vec3.h"
-
-// RTX Weekend
+// CUDA Raytracer
 // Jupiter Sinclair Chong
 
 #pragma once

@@ -1,12 +1,13 @@
+// CUDA Raytracer
+// Jupiter Sinclair Chong
 
 #pragma once
 
 struct interval {
     double min, max;
 
-    interval() : min(+infinity), max(-infinity) {}
     // Default interval is empty
-
+    __host__ __device__ interval() : min(+infinity), max(-infinity) {}
     __host__ __device__ interval(double min, double max) : min(min), max(max) {}
 
     double size() const {

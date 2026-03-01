@@ -1,3 +1,5 @@
+// CUDA Raytracer
+// Jupiter Sinclair Chong
 
 #pragma once
 

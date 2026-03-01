@@ -7,7 +7,7 @@
 #include "hitable.h"
 
 struct Sphere : public Hitable {
-    __device__ Sphere() = default;
+    Sphere() = default;
 
     __device__ 
     Sphere(const point3& center, double radius)
