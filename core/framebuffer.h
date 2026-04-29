@@ -8,10 +8,9 @@
 
 struct Framebuffer {
 	int width = 100, height = 100;
-	color* buffer = nullptr;
+	color* buffer;
 
 	Framebuffer() {}
-
 
 	// Allocate FrameBuffer on GPU using Unified Memory (can be accessed by GPU & CPU)
 	// Calculate the size of the FrameBuffer in bytes

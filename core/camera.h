@@ -64,7 +64,7 @@ namespace Core {
 }
 
 struct Camera {
-    Framebuffer frameBuffer;
+    Framebuffer* frameBuffer;
     double aspectRatio = 1.0;
     int imageWidth = 100;
     int imageHeight = 100;
@@ -88,7 +88,7 @@ struct Camera {
 
         Core::render<<<blocks, threads>>>
         (
-            frameBuffer.buffer, imageWidth, imageHeight,
+            frameBuffer->buffer, imageWidth, imageHeight,
             vec3(-2.0, -1.0, -1.0),
             vec3(4.0, 0.0, 0.0),
             vec3(0.0, 2.0, 0.0),
@@ -106,7 +106,7 @@ struct Camera {
     }
 
     void printPPM() {
-        frameBuffer.printPPM();
+        frameBuffer->printPPM();
     }
 
     std::string printInfo() {
@@ -136,7 +136,7 @@ private:
         dim3 blocks(imageWidth / threadX + 1, imageHeight / threadY + 1);
         dim3 threads(threadX, threadY);
 
-        frameBuffer = Framebuffer(imageWidth, imageHeight);
+        frameBuffer = new Framebuffer(imageWidth, imageHeight);
 
         // 
         double focalLength = 1.;
