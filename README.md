@@ -13,3 +13,5 @@ Compared with [CPU implementation](https://github.com/Jupiter-SC/Raytracing-Week
 | GPU (Nvidia RTX 4050) - 1 thread  | ~ .015   |
 | GPU - 8 threads  | .001   |
 | GPU - 16 threads  | 0 or .001 (lack of precision) |
+
+<img width="400" height="225" alt="normals" src="https://github.com/user-attachments/assets/c9b28254-7b58-41ee-87ba-319ec3fc492f" />
